@@ -3,7 +3,7 @@ import writeAPI
 def main():
     b = writeAPI.WriteAPI()
     #b.createDB()
-    #b.writeDate()
+    #b.writeData()
     b.readData()
     b.closeConn()
 

@@ -1,3 +1,4 @@
+# sqlite3 module is already ported with Python3
 import sqlite3
 
 class WriteAPI():
@@ -15,7 +16,7 @@ class WriteAPI():
         self.c.execute('''CREATE TABLE stocks
                     (date text, trans text, symbol text, qty real, price real)''')
 
-    def writeDate(self):
+    def writeData(self):
 
         # Insert a row of data
         self.c.execute("INSERT INTO stocks VALUES ('2007-01-05','BUY','BHAT',100,36.14)")
@@ -24,6 +25,7 @@ class WriteAPI():
         self.conn.commit()
 
     def readData(self):
+        # Query the data
         self.c.execute("SELECT * FROM stocks;")
 
         for date, trans, symbol, qty, price in self.c.fetchall():
