@@ -2,6 +2,7 @@
 import sqlite3
 import hashlib, math
 import base62
+from datetime import datetime
 
 class WriteAPI():
 
@@ -15,31 +16,32 @@ class WriteAPI():
 
     def createDB(self):
         # Create table
-        self.c.execute('''CREATE TABLE stocks
-                    (date text, trans text, symbol text, qty real, price real)''')
+        self.c.execute('''CREATE TABLE pastes
+                    ('shortlink', 'expiration_length_in_minutes', 'created_at', 'paste_path')''')
 
     def writeData(self, url):
 
-        result = hashlib.sha256(url).hexdigest()
-        print (result)
+        encodedUrl = url.encode()
+        result = hashlib.sha256(encodedUrl).hexdigest()
+
+        new_Url = self.base_encode(int(result, 16))[:7]
+        timeNow = str(datetime.now())
 
         # Insert a row of data
-        self.c.execute("INSERT INTO stocks VALUES ('2007-01-05','BUY','BHAT',100,36.14)")
+        self.c.execute("INSERT INTO pastes ('shortlink', 'expiration_length_in_minutes', 'created_at', 'paste_path')VALUES ( ?, 0, ?, ?)",(new_Url, timeNow, url))
 
         # Save (commit) the changes
         self.conn.commit()
 
+        return new_Url
+
     def readData(self):
 
-        url = ('https://www.google.lk').encode()
-        result = hashlib.sha256(url).hexdigest()
-        print (result)
-
         # Query the data
-        self.c.execute("SELECT * FROM stocks;")
+        self.c.execute("SELECT * FROM pastes;")
 
-        for date, trans, symbol, qty, price in self.c.fetchall():
-            print(date, trans, symbol, qty, price)
+        for shortlink, expiration_length_in_minutes, created_at, paste_path in self.c.fetchall():
+            print(shortlink, expiration_length_in_minutes, created_at, paste_path)
 
         return result    
 
