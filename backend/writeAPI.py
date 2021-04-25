@@ -11,16 +11,7 @@ class WriteAPI():
         self.conn = sqlite3.connect('tinyurl/database/urlmap.db')
 
         self.c = self.conn.cursor()
-
-    def calculate(digits):
-        digitsCount = len(digits)
-        hashString = ""
-        i = 0
-        while digitsCount > i:
-            hashString += BASE62ALPHABET[digits[i]] 
-            i = i + 1
-        return hashString
-        
+      
 
     def createDB(self):
         # Create table
