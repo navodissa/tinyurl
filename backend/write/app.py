@@ -3,7 +3,7 @@ import time
 import writeServer
 
 hostName = "localhost"
-serverPort = 8088
+serverPort = 8080
 
 def main():
 
