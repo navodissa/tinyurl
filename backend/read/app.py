@@ -2,8 +2,8 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import time
 import readServer
 
-hostName = "navoda1c.mylabserver.com"
-serverPort = 8080
+hostName = "0.0.0.0"
+serverPort = 8081
 
 def main():
     
