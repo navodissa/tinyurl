@@ -3,7 +3,7 @@ import time
 import readServer
 
 hostName = "0.0.0.0"
-serverPort = 8081
+serverPort = 8080
 
 def main():
     
