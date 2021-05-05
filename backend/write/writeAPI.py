@@ -4,6 +4,7 @@ import hashlib
 import math
 import base62
 from datetime import datetime
+import os
 
 
 class WriteAPI():
@@ -11,7 +12,7 @@ class WriteAPI():
     def __init__(self):
 
         # Make a connection to the DB. Using the current path.
-        self.conn = sqlite3.connect('tinyurl/database/urlmap.db')
+        self.conn = sqlite3.connect('../../../tinyurl/database/urlmap.db')
 
         self.c = self.conn.cursor()
 

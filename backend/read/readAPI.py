@@ -1,32 +1,27 @@
-# sqlite3, haslib modules are already ported with Python3
+# sqlite3 module are already ported with Python3
 import sqlite3
+from flask_jsonpify import jsonify
 
 class ReadAPI():
 
     def __init__(self) :
-
         # Make a connection to the DB. Using the current path.
         self.conn = sqlite3.connect('tinyurl/database/urlmap.db')
 
-        self.c = self.conn.cursor()
-      
 
-    def readData(self, shortPath):
-
-        # Query the data
-        self.c.execute("""SELECT paste_path FROM pastes WHERE shortlink = ?""",(shortPath,))
-        # (self.c.fetchall())
-
-        for shortlink in self.c.fetchall():
-            return shortlink
-
-        #return result    
-
-
-    def closeConn(self):
-        # We can also close the connection if we are done with it.
-        # Just be sure any changes have been committed or they will be lost.
+    def get(self, shortPath):
+        query = self.conn.execute("""SELECT * FROM pastes WHERE shortlink = ?""",(shortPath,))
+        # Fetch the top result
+        result = query.fetchone()
+        # Close the DB connection
         self.conn.close()
+        if result == None:
+            return jsonify({'ERROR': 'Not Found'})
+        # Jsonfiying the result as requested
+        return jsonify({'shorturl' : result[0], 'created' : result[2], 'data' : result[3]},)
+ 
+
+
     
     
 

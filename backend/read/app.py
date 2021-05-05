@@ -1,22 +1,19 @@
-from http.server import BaseHTTPRequestHandler, HTTPServer
-import time
-import readServer
+import readAPI as rp
+from flask import Flask
+import json
 
 hostName = "0.0.0.0"
 serverPort = 8081
 
-def main():
-    
-    webServer = HTTPServer((hostName, serverPort), readServer.MyServer)
-    print("Server started http://%s:%s" % (hostName, serverPort))
+app = Flask(__name__)
 
-    try:
-        webServer.serve_forever()
-    except KeyboardInterrupt:
-        pass
+@app.route('/read/<shorturl>')
+def read(shorturl):
+    read = rp.ReadAPI()
+    result = read.get(shorturl)
+    return (result)
 
-    webServer.server_close()
-    print("Server stopped.")
+ 
 
 if __name__ == '__main__':
-    main()
+     app.run(port=serverPort, host=hostName)
