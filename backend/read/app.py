@@ -7,7 +7,7 @@ serverPort = 8081
 
 app = Flask(__name__)
 
-@app.route('/read/<shorturl>')
+@app.route('/read/<shorturl>', methods=['GET'])
 def read(shorturl):
     read = rp.ReadAPI()
     result = read.get(shorturl)

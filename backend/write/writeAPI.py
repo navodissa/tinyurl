@@ -4,54 +4,76 @@ import hashlib
 import math
 import base62
 from datetime import datetime
-import os
+from flask_jsonpify import jsonify
 
 
 class WriteAPI():
 
     def __init__(self):
+        try:
+            # Make a connection to the DB. Using the current path.
+            self.conn = sqlite3.connect('tinyurl/database/urlmap.db')
+        except Exception as e:
+            print(e)
+            #return jsonify({'status' : '0'})
 
-        # Make a connection to the DB. Using the current path.
-        self.conn = sqlite3.connect('../../../tinyurl/database/urlmap.db')
-
-        self.c = self.conn.cursor()
-
+            
     def createDB(self):
         # Create table
-        self.c.execute('''CREATE TABLE pastes
+        self.conn.execute('''CREATE TABLE pastes
                     ('shortlink', 'expiration_length_in_minutes', 'created_at', 'paste_path')''')
 
+    def writeDataAPI(self, url):
+        try:
+            # Passed url in the method is encoded
+            encodedUrl = url.encode()
+            # Getting the hexadigest after using the sha256 hashing algorithm
+            result = hashlib.sha256(encodedUrl).hexdigest()
+
+            # Converting the hexadigest into base 62 coversion. It is converted from hexadecimal to decimal in order to use in the base 62 function
+            new_Url = self.base_encode(int(result, 16))[:7]
+
+            # Getting the current time
+            timeNow = str(datetime.now())
+
+            # Insert a row of data
+            self.conn.execute(
+                "INSERT INTO pastes ('shortlink', 'expiration_length_in_minutes', 'created_at', 'paste_path')VALUES ( ?, 0, ?, ?)", (new_Url, timeNow, url))
+
+            # Save (commit) the changes
+            self.conn.commit()
+            self.conn.close()
+            return jsonify({'shorturl' : new_Url, 'status' : '1'})
+        except Exception as e:
+            print (e)
+            return jsonify({'status' : '0'})
+
+
     def writeData(self, url):
+        try:
+            # Passed url in the method is encoded
+            encodedUrl = url.encode()
+            # Getting the hexadigest after using the sha256 hashing algorithm
+            result = hashlib.sha256(encodedUrl).hexdigest()
 
-        # Passed url in the method is encoded
-        encodedUrl = url.encode()
-        # Getting the hexadigest after using the sha256 hashing algorithm
-        result = hashlib.sha256(encodedUrl).hexdigest()
+            # Converting the hexadigest into base 62 coversion. It is converted from hexadecimal to decimal in order to use in the base 62 function
+            new_Url = self.base_encode(int(result, 16))[:7]
 
-        # Converting the hexadigest into base 62 coversion. It is converted from hexadecimal to decimal in order to use in the base 62 function
-        new_Url = self.base_encode(int(result, 16))[:7]
+            # Getting the current time
+            timeNow = str(datetime.now())
 
-        # Getting the current time
-        timeNow = str(datetime.now())
+            # Insert a row of data
+            self.conn.execute(
+                "INSERT INTO pastes ('shortlink', 'expiration_length_in_minutes', 'created_at', 'paste_path')VALUES ( ?, 0, ?, ?)", (new_Url, timeNow, url))
 
-        # Insert a row of data
-        self.c.execute(
-            "INSERT INTO pastes ('shortlink', 'expiration_length_in_minutes', 'created_at', 'paste_path')VALUES ( ?, 0, ?, ?)", (new_Url, timeNow, url))
+            # Save (commit) the changes
+            self.conn.commit()
+            self.conn.close()
+            return new_Url
+        except Exception as e:
+            print (e)
+            return "Your request got failed"
 
-        # Save (commit) the changes
-        self.conn.commit()
-
-        return new_Url
-
-    def readData(self):
-
-        # Query the data
-        self.c.execute("SELECT * FROM pastes;")
-
-        for shortlink, expiration_length_in_minutes, created_at, paste_path in self.c.fetchall():
-            print(shortlink, expiration_length_in_minutes, created_at, paste_path)
-
-        return result
 
     # Function used for base 62 conversion
     def base_encode(self, num, base=62):
@@ -68,7 +90,7 @@ class WriteAPI():
         newUrl = base62.calculate(digits)
         return newUrl
 
-    def closeConn(self):
-        # We can also close the connection if we are done with it.
-        # Just be sure any changes have been committed or they will be lost.
-        self.conn.close()
+    # def closeConn(self):
+    #     # We can also close the connection if we are done with it.
+    #     # Just be sure any changes have been committed or they will be lost.
+    #     self.conn.close()

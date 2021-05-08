@@ -10,15 +10,19 @@ class ReadAPI():
 
 
     def get(self, shortPath):
-        query = self.conn.execute("""SELECT * FROM pastes WHERE shortlink = ?""",(shortPath,))
-        # Fetch the top result
-        result = query.fetchone()
-        # Close the DB connection
-        self.conn.close()
-        if result == None:
-            return jsonify({'ERROR': 'Not Found'})
-        # Jsonfiying the result as requested
-        return jsonify({'shorturl' : result[0], 'created' : result[2], 'data' : result[3]},)
+        try:
+            query = self.conn.execute("""SELECT * FROM pastes WHERE shortlink = ?""",(shortPath,))
+            # Fetch the top result
+            result = query.fetchone()
+            # Close the DB connection
+            self.conn.close()
+            if result == None:
+                return jsonify({'ERROR': 'Not Found', 'status' : '1'})
+            # Jsonfiying the result as requested
+            return jsonify({'shorturl' : result[0], 'created' : result[2], 'data' : result[3],  'status' : '1'},)
+        except Exception as e:
+            print(e)
+            return jsonify({'status' : '0'})
  
 
 

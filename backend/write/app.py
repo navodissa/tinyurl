@@ -1,22 +1,33 @@
-from http.server import BaseHTTPRequestHandler, HTTPServer
-import time
-import writeServer
+import writeAPI as wp
+from flask import Flask, request, render_template
+import json
 
 hostName = "0.0.0.0"
 serverPort = 8080
 
-def main():
+app = Flask(__name__)
 
-    webServer = HTTPServer((hostName, serverPort), writeServer.MyServer)
-    print("Server started http://%s:%s" % (hostName, serverPort))
+@app.route('/')
+def home():
+    return render_template("write.html")
 
-    try:
-        webServer.serve_forever()
-    except KeyboardInterrupt:
-        pass
+@app.route('/write', methods=['POST'])
+def write():
+    if request.method == "POST":
+        record = request.form['title']
+        write = wp.WriteAPI()
+        result = write.writeData(record)
+        return render_template('write_output.html', result=result)
 
-    webServer.server_close()
-    print("Server stopped.")
+
+@app.route('/writeAPI', methods=['POST'])
+def writeAPI():
+    if request.method == "POST":
+        record = request.form['title']
+        write = wp.WriteAPI()
+        result = write.writeData(record)
+        return result
+        
 
 if __name__ == '__main__':
-    main()
+    app.run(host=hostName, port=serverPort)
