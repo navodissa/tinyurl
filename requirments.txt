@@ -1,4 +1,3 @@
 pip3
 flask
 flask-jsonpify
-flask-restful
