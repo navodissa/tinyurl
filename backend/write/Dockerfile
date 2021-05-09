@@ -1,4 +1,4 @@
-FROM python:3.6-alpine
+FROM python:3.6-slim-buster
 
 # Create app directory
 WORKDIR /app
@@ -7,6 +7,8 @@ WORKDIR /app
 #COPY src/requirements.txt ./
 
 RUN cd /app && \
+    apt-get update && \
+    apt-get install git -y && \
     git clone https://github.com/navodissa/tinyurl.git && \
     cd tinyurl && pip3 install -r requirements.txt && \
     cd backend/write
