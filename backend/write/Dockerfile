@@ -7,14 +7,14 @@ WORKDIR /app
 #COPY src/requirements.txt ./
 
 RUN cd /app && \
-<<<<<<< HEAD
+#<<<<<<< HEAD
     apt-get update && \
     apt-get install git -y && \
-=======
+#=======
     apt-get install git && \
->>>>>>> b660cc62c03b8b950cca7777cc2368382095fe02
+#>>>>>>> b660cc62c03b8b950cca7777cc2368382095fe02
     git clone https://github.com/navodissa/tinyurl.git && \
-    cd tinyurl && pip3 install -r requirements.txt && \
+    cd tinyurl && pip3 install -r requirments.txt && \
     cd backend/write
 
 # Bundle app source
