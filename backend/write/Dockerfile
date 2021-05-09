@@ -7,6 +7,7 @@ WORKDIR /app
 #COPY src/requirements.txt ./
 
 RUN cd /app && \
+    apt-get install git && \
     git clone https://github.com/navodissa/tinyurl.git && \
     cd tinyurl && pip3 install -r requirements.txt && \
     cd backend/write
