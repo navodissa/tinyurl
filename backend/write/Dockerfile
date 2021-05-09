@@ -1,4 +1,4 @@
-FROM python:3.6
+FROM python:3.6-alpine
 
 # Create app directory
 WORKDIR /app
@@ -6,9 +6,10 @@ WORKDIR /app
 # Install app dependencies
 #COPY src/requirements.txt ./
 
-RUN cd /app
-RUN git clone https://github.com/navodissa/tinyurl.git
-RUN cd /app/tinyurl/backend/write
+RUN cd /app && \
+    git clone https://github.com/navodissa/tinyurl.git && \
+    cd tinyurl && pip3 install -r requirements.txt && \
+    cd backend/write
 
 # Bundle app source
 #COPY src /app
