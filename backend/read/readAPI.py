@@ -9,7 +9,7 @@ class ReadAPI():
         self.conn = sqlite3.connect('tinyurl/database/urlmap.db')
 
 
-    def get(self, shortPath):
+    def readAPI(self, shortPath):
         try:
             query = self.conn.execute("""SELECT * FROM pastes WHERE shortlink = ?""",(shortPath,))
             # Fetch the top result
@@ -23,6 +23,24 @@ class ReadAPI():
         except Exception as e:
             print(e)
             return jsonify({'status' : '0'})
+
+        
+    def readData(self, shortPath):
+        try:
+            query = self.conn.execute("""SELECT * FROM pastes WHERE shortlink = ?""",(shortPath,))
+            # Fetch the top result
+            result = query.fetchone()
+            # Close the DB connection
+            self.conn.close()
+            if result == None:
+                return ('ERROR: Data Not Found', 'N/A','N/A', 'N/A')
+            # Jsonfiying the result as requested
+            return result
+            # return (f'shorturl     : {result[0]} \n Created    : {result[2]} \n Data       : {result[3]}')
+        except Exception as e:
+            print(e)
+            return ('Something went wrong')
+ 
  
 
 
