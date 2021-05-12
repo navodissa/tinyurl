@@ -21,4 +21,5 @@ RUN cd /app && \
 #COPY src /app
 
 EXPOSE 8080
-CMD [ "python3", "/app/tinyurl/backend/write/app.py" ]
+EXPOSE 8081
+CMD [ "sh", "/app/tinyurl/start_app.sh" ]
