@@ -22,4 +22,5 @@ RUN cd /app && \
 
 EXPOSE 8080
 EXPOSE 8081
-CMD [ "sh", "/app/tinyurl/start_app.sh" ]
+WORKDIR /app/tinyurl
+CMD [ "python3", "/app/tinyurl/backend/write/app.py" ]
